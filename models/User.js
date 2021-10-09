@@ -49,6 +49,7 @@ UserSchema.set("toJSON", {
   versionKey: false,
   transform: function (_, ret) {
     removeProperty(ret, "_id");
+    removeProperty(ret, "password");
   },
 });
 
