@@ -6,6 +6,9 @@ const User = mongoose.model("User");
 async function Create(req, res, next) {
   try {
     const user = new User(req.body);
+    // Modify the password and hash it
+    // base64 is NOT a secure hash, but works as example
+    user.password = Buffer.from(user.password).toString("base64");
     const response = await user.save();
     return res.status(201).json(response);
   } catch (e) {
