@@ -1,0 +1,57 @@
+const [form] = document.getElementsByTagName("form");
+
+form.addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  const inputs = [
+    "name",
+    "email",
+    "password",
+    "birth-day",
+    "birth-month",
+    "birth-year",
+    "card-number",
+    "card-cvc",
+    "card-month",
+    "card-year",
+  ];
+
+  const elements = inputs.map(function (id) {
+    return document.getElementById(id);
+  });
+
+  const body = { birth: {}, card: {} };
+
+  elements.forEach(function (e, index) {
+    const key = inputs[index];
+
+    // Verify if key has a hypen.
+    // If so make an subobject with the second part of the name as key and the
+    // suboject name is the first part of the original key
+    const splitted = key.split("-");
+    if (splitted.length > 1) {
+      const [left, right] = splitted;
+      body[left][right] = e.value;
+    } else {
+      body[key] = e.value;
+    }
+  });
+
+  fetch("http://localhost:3000/user", {
+    method: "POST",
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    redirect: "follow",
+    referrerPolicy: "no-referrer",
+    body: JSON.stringify(body),
+  })
+    .then((response) => response.json())
+    .then((response) => {
+      alert("Se guardó el registro en la base de datos");
+    })
+    .catch(console.error);
+});
